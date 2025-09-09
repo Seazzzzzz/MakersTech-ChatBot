@@ -5,17 +5,15 @@ import mysql.connector
 from rapidfuzz import fuzz
 import re
 
-# ==== CONFIGURA TU CONEXIÓN A MYSQL (XAMPP) ====
 DB_CFG = dict(
     host="localhost",
     user="root",
-    password="",          # pon tu pass si tienes
-    database="tienda"     # <-- cambia si tu BD tiene otro nombre
+    password="",         
+    database="tienda"    
 )
 
 app = FastAPI()
 
-# Permite llamadas desde tu sitio en XAMPP
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost", "http://127.0.0.1"],
@@ -33,7 +31,6 @@ def get_conn():
 def limpiar(texto: str) -> str:
     return re.sub(r"\s+", " ", texto).strip().lower()
 
-# ===== MAPA DE SINÓNIMOS =====
 ALIASES = {
     "apple": ["macbook", "mac"],
     "hp": ["hp", "hewlett"],
@@ -53,14 +50,12 @@ def chat(req: ChatIn):
     if not q or len(q) < 2:
         return {"answer": "¿Qué producto buscas? Puedes decir 'HP', 'MacBook', 'Samsung', etc."}
 
-    # Extrae tokens simples
     tokens = [t.lower() for t in re.findall(r"[a-zA-Z0-9]+", q) if len(t) > 1]
     tokens = expandir_tokens(tokens)
 
     if not tokens:
         return {"answer": "No entendí la consulta. Intenta con el nombre o la marca del producto."}
 
-    # Construye WHERE con LIKE para varios tokens
     where = " OR ".join([f"LOWER(nombre) LIKE %s" for _ in tokens])
     params = [f"%{t.lower()}%" for t in tokens]
 
@@ -68,7 +63,6 @@ def chat(req: ChatIn):
     cur = conn.cursor(dictionary=True)
 
     try:
-        # Busca por coincidencias de nombre
         cur.execute(f"""
             SELECT id, nombre, precio, stock, especificaciones
             FROM productos
@@ -79,7 +73,6 @@ def chat(req: ChatIn):
         rows = cur.fetchall()
 
         if not rows:
-            # Fuzzy matching por si LIKE no encontró nada
             cur.execute("SELECT id, nombre, precio, stock, especificaciones FROM productos")
             all_rows = cur.fetchall()
             scored = []
@@ -95,13 +88,10 @@ def chat(req: ChatIn):
         if not rows:
             return {"answer": "No encontré productos que coincidan. Prueba con otra marca o modelo."}
 
-        # === Detectar si el usuario pide especificaciones ===
         pide_specs = any(palabra in q for palabra in [
             "especificaciones", "caracteristicas", "características", "detalles", "informacion", "información"
         ])
-
-        # === Generar respuesta natural ===
-        # Caso con un solo producto encontrado
+        
         if len(rows) == 1:
             r = rows[0]
             if pide_specs:
@@ -133,7 +123,6 @@ def chat(req: ChatIn):
                         f"pero ahora mismo no está disponible 😔 (stock: 0)."
                     )
         else:
-            # Si hay varios productos y el usuario escribió un nombre exacto
             for r in rows:
                 if r['nombre'].lower() in q:
                     if pide_specs:
@@ -165,7 +154,6 @@ def chat(req: ChatIn):
                                 f"pero ahora mismo no está disponible 😔 (stock: 0)."
                             )}
 
-            # Si no, mostrar lista de productos
             partes = []
             for r in rows:
                 if r['stock'] > 0:
@@ -183,3 +171,4 @@ def chat(req: ChatIn):
     finally:
         cur.close()
         conn.close()
+
