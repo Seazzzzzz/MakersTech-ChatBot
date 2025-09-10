@@ -25,6 +25,8 @@ buttons.forEach(button => {
     });
 });
 
+// LOGN Y REGISTER
+
 const tabs = document.querySelectorAll(".auth-tab");
 const forms = document.querySelectorAll(".auth-form");
 
@@ -33,10 +35,13 @@ tabs.forEach(tab => {
     tabs.forEach(t => t.classList.remove("active"));
     forms.forEach(f => f.classList.remove("active"));
 
+// Activar el tab y formulario seleccionado
     tab.classList.add("active");
     document.getElementById(tab.dataset.tab + "-form").classList.add("active");
 });
 });
+
+// Función para registrar usuario 
 
 function register() {
     const data = {
@@ -45,6 +50,8 @@ function register() {
     password: document.getElementById("register-password").value
 };
 
+//Llamada al backend Flask para registrar usuario
+    
     fetch("http://localhost:5000/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -55,11 +62,15 @@ function register() {
 .catch(err => console.error(err));
 }
 
+// --- Función para iniciar sesión 
+
 function login() {
     const data = {
     email: document.getElementById("login-email").value,
     password: document.getElementById("login-password").value
 };
+
+// Llamada al backend Flask para validar login    
 
 fetch("http://localhost:5000/login", {
     method: "POST",
@@ -71,7 +82,7 @@ fetch("http://localhost:5000/login", {
     .catch(err => console.error(err));
 }
 
-//INICIAR SESION Y REGISTRARSE PAGINA
+// ANIMACIÓN DE FORMULARIO LOGIN/REGISTRO
 
 const sign_in_btn = document.querySelector("#sign-in-btn");
 const sign_up_btn = document.querySelector("#sign-up-btn");
@@ -94,4 +105,5 @@ window.addEventListener("scroll", function() {
     } else {
         menu.classList.remove("scrolled");
     }
+
 });
