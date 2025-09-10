@@ -82,33 +82,28 @@ if (session_status() == PHP_SESSION_NONE) session_start();
             </p>
         </div>
 
-        <!-- Botones de filtro -->
         <div class="filter-buttons">
             <button class="btn-filter" data-brand="hp">HP</button>
             <button class="btn-filter" data-brand="samsung">Samsung</button>
             <button class="btn-filter" data-brand="apple">Apple</button>
         </div>
 
-        <!-- Productos dinámicos -->
         <div class="services-group">
             <?php
             $db = new mysqli("localhost", "root", "", "tienda");
             if ($db->connect_error) {
                 echo "<p>Error de conexión a la base de datos.</p>";
             } else {
-                // Traer todos los productos
                 $sql = "SELECT id, nombre, precio, stock, imagen FROM productos ORDER BY id ASC";
                 $res = $db->query($sql);
 
                 if ($res && $res->num_rows > 0) {
                     while ($row = $res->fetch_assoc()) {
-                        // Imagen: si no hay, usamos default
                         $imgPath = !empty($row['imagen']) ? $row['imagen'] : "productos/default.jpg";
                         $nombre  = htmlspecialchars($row['nombre'], ENT_QUOTES);
                         $precio  = number_format($row['precio'], 0, ',', '.');
                         $stock   = intval($row['stock']);
 
-                        // Determinar la marca en base al nombre (puedes mejorar si tienes campo 'marca' en la BD)
                         $brand = "all";
                         if (stripos($nombre, "hp") !== false) $brand = "hp";
                         elseif (stripos($nombre, "samsung") !== false) $brand = "samsung";
@@ -151,7 +146,6 @@ if (session_status() == PHP_SESSION_NONE) session_start();
                 if (!isset($_SESSION['user_id'])) {
                     echo '<div class="recommended-msg">Inicia sesión para ver recomendaciones personalizadas. <a href="login_register.php">Iniciar sesión</a></div>';
                 } else {
-                    // Conexión DB
                     $db = new mysqli("localhost","root","","tienda");
                     if ($db->connect_error) {
                         echo '<div class="recommended-msg">Error de conexión a la base de datos.</div>';
@@ -161,9 +155,9 @@ if (session_status() == PHP_SESSION_NONE) session_start();
 
                         if ($res && $res->num_rows > 0) {
                             while ($row = $res->fetch_assoc()) {
-                                // Intentamos usar imagen por id (productos/ID.jpg), si no existe usamos default.jpg
+                                
                                 $imgPath = !empty($row['imagen']) ? $row['imagen'] : "productos/default.jpg";
-                                // Sanitizar salida
+                                
                                 $nombre = htmlspecialchars($row['nombre'], ENT_QUOTES);
                                 $precio = number_format($row['precio'], 0, ',', '.');
                                 $stock  = intval($row['stock']);
@@ -198,7 +192,6 @@ if (session_status() == PHP_SESSION_NONE) session_start();
             </div>
         </div>
     </section>
-    <!-- ===== end Highly Recommended ===== -->
     <footer>
         <div class="footer-bg">
             <h2>Comentanos lo que piensas!</h2>
@@ -233,4 +226,5 @@ window.addEventListener("scroll", function() {
 });
 </script>
 </body>
+
 </html>
