@@ -231,8 +231,6 @@ form.sign-in-form {
     transform: translateX(800px);
 }
 
-/* Animacion */
-
 .container.sign-up-mode:before {
     transform: translate(100%, -50%);
     right: 52%;
@@ -396,4 +394,5 @@ form {
     left: 50%;
 }
 }
+
 
