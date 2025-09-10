@@ -11,7 +11,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $_POST['email'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-        // Verificar si el correo ya existe
         $check = $conn->prepare("SELECT id FROM usuarios WHERE email=?");
         $check->bind_param("s", $email);
         $check->execute();
@@ -24,7 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("sss", $usuario, $email, $password);
 
             if ($stmt->execute()) {
-                // Redirigir al index.html
                 header("Location: login_register.php");
                 exit();
             } else {
@@ -46,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['password'])) {
-            // Guardar sesión
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['usuario'] = $row['usuario'];
             $_SESSION['email']   = $row['email'];
@@ -64,3 +61,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 $conn->close();
 ?>
+
