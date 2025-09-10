@@ -21,7 +21,6 @@ body {
     height: 100vh;
 }
 
-/* Sección izquierda con imagen */
 .left {
     flex: 1;
     display: flex;
@@ -36,7 +35,6 @@ body {
     border-radius: 12px;
 }
 
-/* Sección derecha con el chatbot */
 .right {
     flex: 1;
     display: flex;
@@ -136,4 +134,5 @@ a:hover {
     color: #550509;
     border: solid 2px #550509;
     transform: translateX(2px);
+
 }
