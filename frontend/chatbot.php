@@ -63,10 +63,10 @@ if (session_status() == PHP_SESSION_NONE) session_start();
     send.onclick = ask;
     q.addEventListener('keydown', (e)=>{ if(e.key==='Enter') ask(); });
 
-    // === Mensaje inicial del bot ===
     document.addEventListener("DOMContentLoaded", () => {
         addMsg("👋 Hola, soy tu asistente de Makers Tech.\nPuedes preguntarme por precios o disponibilidad de productos.\nEjemplo: '¿Cuánto cuesta el HP Pavilion?'", "bot");
     });
 </script>
 </body>
 </html>
+
